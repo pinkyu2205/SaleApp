@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".activities.MainActivity">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/tvWelcome"
@@ -14,23 +13,23 @@
         android:layout_height="wrap_content"
         android:text="Welcome to Sales App"
         android:textSize="24sp"
-        android:textColor="@color/text_primary"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textColor="#000000"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/tvSubtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Your one-stop shop for everything!"
+        android:text="Your one-stop shop!"
         android:textSize="16sp"
-        android:textColor="@color/text_secondary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvWelcome" />
+        android:textColor="#666666" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Logout"
+        android:padding="12dp" />
+
+</LinearLayout>
