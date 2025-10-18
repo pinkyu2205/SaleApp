@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;  // ← THÊM DÒNG NÀY
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.salesapp.activities.MainActivity;
 import com.example.salesapp.R;
 import com.example.salesapp.helpers.FirebaseHelper;
 
@@ -23,6 +23,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText etUsername, etEmail, etPassword, etConfirmPassword, etPhone, etAddress;
     private Button btnSignUp;
     private TextView tvLogin;
+    private ImageView btnBack;  // ← THÊM DÒNG NÀY
     private FirebaseHelper firebaseHelper;
 
     @Override
@@ -37,6 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        btnBack = findViewById(R.id.btnBack);  // ← THÊM DÒNG NÀY
         etUsername = findViewById(R.id.etUsername);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
@@ -48,6 +50,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
+        btnBack.setOnClickListener(v -> finish());  // ← THÊM DÒNG NÀY
         btnSignUp.setOnClickListener(v -> signUp());
         tvLogin.setOnClickListener(v -> finish());
     }

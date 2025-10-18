@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.salesapp.activities.MainActivity;
 import com.example.salesapp.R;
 import com.example.salesapp.helpers.FirebaseHelper;
 
@@ -71,8 +70,23 @@ public class LoginActivity extends AppCompatActivity {
         firebaseHelper.getAuth().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
-                        goToMainActivity();
+                        // Verify user exists in database before proceeding
+                        String userId = task.getResult().getUser().getUid();
+
+                        firebaseHelper.getUsersRef()
+                                .child(userId)
+                                .get()
+                                .addOnCompleteListener(dbTask -> {
+                                    if (dbTask.isSuccessful() && dbTask.getResult().exists()) {
+                                        Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+                                        goToMainActivity();
+                                    } else {
+                                        Toast.makeText(this, "User data not found. Please contact support.", Toast.LENGTH_LONG).show();
+                                        firebaseHelper.signOut();
+                                        btnLogin.setEnabled(true);
+                                        btnLogin.setText("Login");
+                                    }
+                                });
                     } else {
                         String error = task.getException() != null ?
                                 task.getException().getMessage() : "Login failed";
@@ -88,7 +102,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void goToMainActivity() {
-        startActivity(new Intent(this, MainActivity.class));
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
         finish();
     }
 }
