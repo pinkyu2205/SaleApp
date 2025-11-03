@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.myapplicationsaleapp.ui.auth.LoginFragment"
+        android:label="Login">
+        <action
+            android:id="@+id/action_login_to_signup"
+            app:destination="@id/signupFragment" />
+        <action
+            android:id="@+id/action_login_to_productList"
+            app:destination="@id/productListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signupFragment"
+        android:name="com.example.myapplicationsaleapp.ui.auth.SignupFragment"
+        android:label="Sign Up">
+        <action
+            android:id="@+id/action_signup_to_login"
+            app:destination="@id/loginFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/productListFragment"
+        android:name="com.example.myapplicationsaleapp.ui.product.ProductListFragment"
+        android:label="Products">
+        <action
+            android:id="@+id/action_list_to_detail"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_list_to_cart"
+            app:destination="@id/cartFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="com.example.myapplicationsaleapp.ui.product.ProductDetailFragment"
+        android:label="Detail">
+        <action
+            android:id="@+id/action_detail_to_cart"
+            app:destination="@id/cartFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.myapplicationsaleapp.ui.cart.CartFragment"
+        android:label="Cart">
+        <action
+            android:id="@+id/action_cart_to_billing"
+            app:destination="@id/billingFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/billingFragment"
+        android:name="com.example.myapplicationsaleapp.ui.checkout.BillingFragment"
+        android:label="Billing">
+        <action
+            android:id="@+id/action_billing_to_success"
+            app:destination="@id/orderSuccessFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/orderSuccessFragment"
+        android:name="com.example.myapplicationsaleapp.ui.checkout.OrderSuccessFragment"
+        android:label="Success" />
+</navigation>
