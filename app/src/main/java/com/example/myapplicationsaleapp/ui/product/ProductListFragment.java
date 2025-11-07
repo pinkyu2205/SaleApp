@@ -28,6 +28,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import android.util.Log;
+import java.util.ArrayList;
+import java.util.Locale;
+import android.annotation.SuppressLint;
+import network.models.ProductListItem;
+import com.example.myapplicationsaleapp.Data.Product;
 
 
 public class ProductListFragment extends Fragment {
@@ -59,25 +64,21 @@ public class ProductListFragment extends Fragment {
 
             @Override
             public void onAdd(ProductListItem p) { // <-- 6. Sửa model thành ProductListItem
-
-                // 7. (QUAN TRỌNG)
-                // cartVM của bạn đang dùng 'Product' (data giả)
-                // Bạn cần gọi API 'addToCart' ở đây, hoặc sửa 'CartViewModel'
-                // Tạm thời, chúng ta sẽ gọi thẳng API 'addToCart'
-
-                // (Bạn cần thêm hàm addToCart(int productId, int quantity) vào fragment này,
-                // giống như hàm trong ProductDetailFragment)
-                // addToCart(p.productID, 1);
-
-                // Hoặc nếu bạn muốn giữ logic cũ (thêm Product vào CartVM):
-                // Đây là giải pháp tạm, bạn nên sửa CartViewModel để dùng ProductListItem
-                Product fakeProduct = new Product(String.valueOf(p.productID), p.productName, p.price, p.briefDescription, p.imageURL, p.categoryName, p.categoryName, 0.0);
+                Product fakeProduct = new Product(
+                        String.valueOf(p.productID),
+                        p.productName,
+                        p.price,
+                        p.briefDescription,
+                        p.imageURL,
+                        p.categoryName,
+                        p.categoryName,
+                        0.0 // (Rating giả)
+                );
                 cartVM.add(fakeProduct, 1);
-
                 requireActivity().setTitle("Cart(" + cartVM.count() + ")");
             }
         });
-
+        rv.setAdapter(productAdapter);
 
         view.<Button>findViewById(R.id.btnCart).setOnClickListener(btn ->
                 Navigation.findNavController(view).navigate(R.id.action_list_to_cart)
@@ -113,7 +114,7 @@ public class ProductListFragment extends Fragment {
             if (newItems != null) {
                 this.items.addAll(newItems);
             }
-            notifyDataSetChanged(); // Thông báo cho RecyclerView vẽ lại
+            notifyDataSetChanged();
         }
         static class VH extends RecyclerView.ViewHolder {
             ImageView img;
@@ -168,8 +169,9 @@ public class ProductListFragment extends Fragment {
             public void onResponse(Call<List<ProductListItem>> call, Response<List<ProductListItem>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<ProductListItem> products = response.body();
-
-
+                    if (productAdapter != null) {
+                        productAdapter.updateData(products);
+                    }
                     Log.d("ProductList", "Tải thành công: " + products.size() + " sản phẩm");
                 } else {
                     // Xử lý lỗi (ví dụ: response.code() == 404)

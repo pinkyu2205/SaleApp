@@ -41,15 +41,10 @@ public class ProductDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         cartVM = new ViewModelProvider(requireActivity()).get(CartViewModel.class);
-        String id = requireArguments().getString("id");
-        product = FakeRepository.getById(id);
+        currentProductId = requireArguments().getInt("id");
         loadProductDetails(currentProductId);
-        ImageView img = view.findViewById(R.id.img);
-        ((TextView) view.findViewById(R.id.tvName)).setText(product.name);
-        ((TextView) view.findViewById(R.id.tvDesc)).setText(product.desc);
         TextView tvQty = view.findViewById(R.id.tvQty);
-        Coil.imageLoader(requireContext()).enqueue(new ImageRequest.Builder(requireContext())
-                .data(product.imageUrl).target(img).build());
+
         view.findViewById(R.id.btnPlus).setOnClickListener(b -> {
             qty++;
             tvQty.setText(String.valueOf(qty));
@@ -59,29 +54,41 @@ public class ProductDetailFragment extends Fragment {
             tvQty.setText(String.valueOf(qty));
         });
         view.findViewById(R.id.btnAdd).setOnClickListener(b -> {
-            cartVM.add(product, qty);
+            addToCart(currentProductId, qty);
+
             Navigation.findNavController(view).popBackStack();
         });
     }
 
     // --- HÀM TẢI CHI TIẾT SẢN PHẨM ---
     private void loadProductDetails(int productId) {
-
         ApiService apiService = RetrofitClient.get().create(ApiService.class);
         Call<ProductDetail> call = apiService.getProductDetail(productId);
 
         call.enqueue(new Callback<ProductDetail>() {
             @Override
             public void onResponse(Call<ProductDetail> call, Response<ProductDetail> response) {
+                if (getView() == null) {
+                    return;
+                }
+
                 if (response.isSuccessful() && response.body() != null) {
                     ProductDetail detail = response.body();
 
-                    // !!! NƠI CẬP NHẬT UI !!!
-                    // Ví dụ:
-                    // binding.productName.setText(detail.productName);
-                    // binding.productPrice.setText(String.format("%.0f VND", detail.price));
-                    // binding.productDescription.setText(detail.fullDescription);
-                    // Glide.with(getContext()).load(detail.imageURL).into(binding.productImage);
+                    // !!! NƠI CẬP NHẬT UI BẰNG DATA THẬT !!!
+                    TextView tvName = getView().findViewById(R.id.tvName);
+                    TextView tvDesc = getView().findViewById(R.id.tvDesc);
+                    ImageView img = getView().findViewById(R.id.img);
+
+                    tvName.setText(detail.productName);
+                    // Dùng mô tả đầy đủ (hoặc briefDescription tùy bạn)
+                    tvDesc.setText(detail.fullDescription);
+
+                    Coil.imageLoader(requireContext()).enqueue(new ImageRequest.Builder(requireContext())
+                            .data(detail.imageURL)
+                            .target(img)
+                            .build());
+
                 } else {
                     Log.e("ProductDetail", "Lỗi khi tải chi tiết: " + response.message());
                 }
