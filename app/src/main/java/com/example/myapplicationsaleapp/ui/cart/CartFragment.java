@@ -1,5 +1,6 @@
 package com.example.myapplicationsaleapp.ui.cart;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
@@ -12,7 +13,18 @@ import com.example.myapplicationsaleapp.R;
 import com.example.myapplicationsaleapp.Data.CartItem;
 import com.example.myapplicationsaleapp.shared.CartState;
 import com.example.myapplicationsaleapp.shared.CartViewModel;
+import com.example.myapplicationsaleapp.ui.auth.TokenStore;
+
 import java.util.List;
+
+import network.ApiService;
+import network.RetrofitClient;
+import network.models.Cart;
+import network.models.UpdateCartItemRequest;
+import android.util.Log; // Sửa lỗi 'cannot find symbol: variable Log'
+import retrofit2.Call; // Sửa lỗi 'cannot find symbol: class Call'
+import retrofit2.Callback; // Sửa lỗi 'cannot find symbol: class Callback'
+import retrofit2.Response; // Sửa lỗi 'cannot find symbol: class Response'
 
 public class CartFragment extends Fragment {
     private CartViewModel cartVM;
@@ -67,6 +79,63 @@ public class CartFragment extends Fragment {
             h.itemView.setOnLongClickListener(v -> { onRemove.rm(ci.product.id); return true; });
         }
         @Override public int getItemCount(){ return data.size(); }
+    }
+    // --- HÀM CẬP NHẬT SỐ LƯỢNG ---
+    public void updateItemQuantity(Context context, int cartItemId, int newQuantity) {
+        String bearerToken = "Bearer " + TokenStore.get(context);
+        UpdateCartItemRequest requestBody = new UpdateCartItemRequest(newQuantity);
+
+        ApiService apiService = RetrofitClient.get().create(ApiService.class);
+        Call<Cart> call = apiService.updateCartItem(bearerToken, cartItemId, requestBody);
+
+        call.enqueue(new Callback<Cart>() {
+            @Override
+            public void onResponse(Call<Cart> call, Response<Cart> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Thành công! API trả về giỏ hàng mới
+                    // Bạn cần cập nhật lại danh sách của adapter VÀ tổng tiền
+                    // adapter.submitList(response.body().items);
+                    // fragment.updateTotalPrice(response.body().totalPrice);
+                    Log.d("Cart", "Cập nhật thành công");
+                } else {
+                    Log.e("Cart", "Lỗi cập nhật: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Cart> call, Throwable t) {
+                Log.e("Cart", "Lỗi mạng: " + t.getMessage());
+            }
+        });
+    }
+
+    // --- HÀM XÓA SẢN PHẨM ---
+    public void removeItemFromCart(Context context, int cartItemId) {
+        String bearerToken = "Bearer " + TokenStore.get(context);
+
+
+        ApiService apiService = RetrofitClient.get().create(ApiService.class);
+        Call<Cart> call = apiService.removeCartItem(bearerToken, cartItemId);
+
+        call.enqueue(new Callback<Cart>() {
+            @Override
+            public void onResponse(Call<Cart> call, Response<Cart> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Thành công! API trả về giỏ hàng mới
+                    // Cập nhật lại danh sách của adapter VÀ tổng tiền
+                    // adapter.submitList(response.body().items);
+                    // fragment.updateTotalPrice(response.body().totalPrice);
+                    Log.d("Cart", "Xóa thành công");
+                } else {
+                    Log.e("Cart", "Lỗi xóa: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Cart> call, Throwable t) {
+                Log.e("Cart", "Lỗi mạng: " + t.getMessage());
+            }
+        });
     }
 }
 

@@ -1,28 +1,27 @@
 package network.models;
-
 import com.google.gson.annotations.SerializedName;
-
-public class ProductListItem {
-    // Đã sửa từ String sang int để khớp với C# "ProductID"
+public class ProductDetail {
     @SerializedName("productID")
     public int productID;
 
-    // Đã sửa từ "name" thành "productName"
     @SerializedName("productName")
     public String productName;
 
-    // Đã sửa từ "desc" thành "briefDescription"
     @SerializedName("briefDescription")
     public String briefDescription;
 
-    @SerializedName("price")
-    public double price; // C# decimal -> Java double
+    @SerializedName("fullDescription")
+    public String fullDescription;
 
-    // Đã sửa từ "imageUrl" thành "imageURL"
+    @SerializedName("technicalSpecifications")
+    public String technicalSpecifications;
+
+    @SerializedName("price")
+    public double price;
+
     @SerializedName("imageURL")
     public String imageURL;
 
-    // Thêm trường còn thiếu
     @SerializedName("categoryName")
     public String categoryName;
 }
