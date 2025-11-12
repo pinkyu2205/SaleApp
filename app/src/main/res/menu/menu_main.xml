@@ -4,18 +4,18 @@
     tools:context="com.example.myapplicationsaleapp.MainActivity">
 
     <item
-        android:id="@+id/action_cart"
-        android:icon="@drawable/ic_cart"  android:title="Giỏ hàng"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/productListFragment"
+        android:icon="@android:drawable/ic_menu_gallery"
+        android:title="Products" />
 
     <item
-        android:id="@+id/action_profile"
-        android:icon="@drawable/ic_profile" android:title="Tài khoản"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/cartFragment"
+        android:icon="@android:drawable/ic_menu_view"
+        android:title="Cart" />
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/mapFragment"
+        android:icon="@android:drawable/ic_menu_mylocation"
+        android:title="Map" />
+
 </menu>

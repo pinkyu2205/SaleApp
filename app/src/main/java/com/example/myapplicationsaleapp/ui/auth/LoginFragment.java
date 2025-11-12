@@ -22,8 +22,8 @@ public class LoginFragment extends Fragment {
 
     @Override public void onViewCreated(View v, @Nullable Bundle s){
         v.<Button>findViewById(R.id.btnLogin).setOnClickListener(btn -> {
-            String username = v.<TextView>findViewById(R.id.etEmail).getText().toString().trim();
-            String password = v.<TextView>findViewById(R.id.etPassword).getText().toString();
+            String username = v.<TextView>findViewById(R.id.editTextUsername).getText().toString().trim();
+            String password = v.<TextView>findViewById(R.id.editTextPassword).getText().toString();
             if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(requireContext(), "Please enter username and password", Toast.LENGTH_SHORT).show();
                 return;

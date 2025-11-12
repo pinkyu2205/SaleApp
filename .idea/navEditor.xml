@@ -8,6 +8,11 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="action_profile_to_login">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
                   <entry key="billingFragment">
                     <value>
                       <LayoutPositions>
@@ -76,6 +81,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="navigation_profile">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="orderSuccessFragment">
                     <value>
                       <LayoutPositions>
@@ -131,27 +148,6 @@
                               </value>
                             </entry>
                             <entry key="action_list_to_profile">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
-                  <entry key="profileFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="12" />
-                            <option name="y" value="12" />
-                          </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_profile_to_login">
                               <value>
                                 <LayoutPositions />
                               </value>
