@@ -2,6 +2,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.myapplicationsaleapp.MainActivity">
+
+    <item
+        android:id="@+id/action_cart"
+        android:icon="@drawable/ic_cart"  android:title="Giỏ hàng"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_profile"
+        android:icon="@drawable/ic_profile" android:title="Tài khoản"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

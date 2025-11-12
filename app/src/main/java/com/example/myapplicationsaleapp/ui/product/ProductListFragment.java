@@ -9,12 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.*;
 import coil.Coil;
 import coil.request.ImageRequest;
 import com.example.myapplicationsaleapp.R;
-import com.example.myapplicationsaleapp.Data.FakeRepository;
 import com.example.myapplicationsaleapp.Data.Product;
 import com.example.myapplicationsaleapp.shared.CartViewModel;
 
@@ -28,11 +28,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import android.util.Log;
-import java.util.ArrayList;
-import java.util.Locale;
-import android.annotation.SuppressLint;
-import network.models.ProductListItem;
-import com.example.myapplicationsaleapp.Data.Product;
 
 
 public class ProductListFragment extends Fragment {
@@ -41,6 +36,12 @@ public class ProductListFragment extends Fragment {
 
     public ProductListFragment() {
         super(R.layout.fragment_product_list);
+    }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Báo cho hệ thống biết Fragment này muốn thêm item vào menu trên Toolbar
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -91,6 +92,39 @@ public class ProductListFragment extends Fragment {
         spFilter.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1,
                 new String[]{"All", "Drink", "Machine"}));
         loadProducts();
+    }
+
+    // ==== THÊM PHƯƠNG THỨC NÀY ====
+    // Nạp file menu (menu_main.xml) vào Toolbar
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    // ==== THÊM PHƯƠNG THỨC NÀY ====
+    // Xử lý khi người dùng click vào item trên menu
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Lấy NavController
+        NavController navController = Navigation.findNavController(requireView());
+        int id = item.getItemId();
+
+        if (id == R.id.action_cart) {
+            // Điều hướng đến Giỏ hàng (dùng action ID trong nav_graph)
+            navController.navigate(R.id.action_list_to_cart);
+            return true;
+        } else if (id == R.id.action_profile) {
+            // Điều hướng đến Profile (dùng action ID trong nav_graph)
+            navController.navigate(R.id.action_list_to_profile);
+            return true;
+        } else if (id == R.id.action_settings) {
+            // Xử lý settings (nếu có)
+            Toast.makeText(getContext(), "Settings clicked", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 
