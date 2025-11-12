@@ -12,8 +12,8 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginTop="48dp"
-        android:src="@android:drawable/ic_menu_gallery"
-        android:contentDescription="Logo"
+        android:src="@drawable/ic_launcher_foreground"
+        android:contentDescription="SalesApp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Welcome Back"
+        android:text="Sales App"
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="#333333"
@@ -31,31 +31,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivLogo" />
 
-    <TextView
-        android:id="@+id/tvSubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Sign in to continue"
-        android:textSize="16sp"
-        android:textColor="#666666"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilEmail"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:hint="Email or Username"
+        android:hint="Username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvSubtitle"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        app:layout_constraintTop_toBottomOf="@id/tvTitle">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etEmail"
+            android:id="@+id/editTextUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
@@ -65,6 +53,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -72,11 +61,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tilEmail"
-        app:passwordToggleEnabled="true"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etPassword"
+            android:id="@+id/editTextPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"

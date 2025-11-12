@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- sử dụng MapView từ osmdroid -->
+    <org.osmdroid.views.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabMyLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:layout_margin="16dp"
+        android:contentDescription="My Location"
+        android:src="@android:drawable/ic_menu_mylocation"
+        app:fabSize="mini" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabOpenStreetMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="80dp"
+        android:contentDescription="Open in OpenStreetMap"
+        android:src="@android:drawable/ic_dialog_map"
+        app:fabSize="mini"
+        app:tint="@android:color/white" />
+
+    <!-- Card hiển thị thông tin cửa hàng -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardStoreDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/textViewStoreName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tên cửa hàng"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/textViewStoreAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Địa chỉ"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/textViewStoreHours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Giờ mở cửa"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/textViewStorePhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Số điện thoại"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginBottom="12dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonGetDirections"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chỉ đường"
+                android:textSize="14sp"
+                app:icon="@android:drawable/ic_menu_directions"
+                app:iconGravity="textStart"
+                app:cornerRadius="8dp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

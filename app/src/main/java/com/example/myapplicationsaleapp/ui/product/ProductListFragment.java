@@ -81,10 +81,6 @@ public class ProductListFragment extends Fragment {
         });
         rv.setAdapter(productAdapter);
 
-        view.<Button>findViewById(R.id.btnCart).setOnClickListener(btn ->
-                Navigation.findNavController(view).navigate(R.id.action_list_to_cart)
-        );
-
         Spinner spSort = view.findViewById(R.id.spSort);
         Spinner spFilter = view.findViewById(R.id.spFilter);
         spSort.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1,
@@ -110,15 +106,12 @@ public class ProductListFragment extends Fragment {
         NavController navController = Navigation.findNavController(requireView());
         int id = item.getItemId();
 
-        if (id == R.id.action_cart) {
+        if (id == R.id.action_cart_to_billing) {
             // Điều hướng đến Giỏ hàng (dùng action ID trong nav_graph)
             navController.navigate(R.id.action_list_to_cart);
             return true;
-        } else if (id == R.id.action_profile) {
-            // Điều hướng đến Profile (dùng action ID trong nav_graph)
-            navController.navigate(R.id.action_list_to_profile);
-            return true;
-        } else if (id == R.id.action_settings) {
+
+        } else if (id == R.id.action_detail_to_cart) {
             // Xử lý settings (nếu có)
             Toast.makeText(getContext(), "Settings clicked", Toast.LENGTH_SHORT).show();
             return true;
