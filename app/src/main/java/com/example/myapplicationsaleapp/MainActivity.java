@@ -12,12 +12,15 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.example.myapplicationsaleapp.shared.CartViewModel;
 import com.example.myapplicationsaleapp.utils.BadgeUtils;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNav;
     private CartViewModel cartViewModel;
-
+    public static final String CART_CHANNEL_ID = "CART_CHANNEL";
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 1) Gắn đúng layout chứa nav_host_fragment
@@ -62,13 +65,36 @@ public class MainActivity extends AppCompatActivity {
                 bottomNav.setVisibility(android.view.View.VISIBLE);
             }
         });
-
+        createNotificationChannel();
         // 8) Thiết lập CartViewModel để cập nhật badge
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
         cartViewModel.state.observe(this, cartState ->
                 BadgeUtils.showBadge(bottomNav, R.id.cartFragment, cartViewModel.count()));
-    }
+        cartViewModel.state.observe(this, cartState -> {
+            int totalItems = cartViewModel.count();
 
+            BadgeUtils.showBadge(bottomNav, R.id.cartFragment, totalItems);
+
+            BadgeUtils.updateAppIconBadge(this, totalItems);
+        });
+    }
+    private void createNotificationChannel() {
+        // Chỉ tạo channel trên API 26+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Giỏ hàng"; // Tên channel
+            String description = "Thông báo về giỏ hàng"; // Mô tả
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CART_CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+
+            // Bật tính năng badge cho channel này
+            channel.setShowBadge(true);
+
+            // Đăng ký channel với hệ thống
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
     @Override public boolean onSupportNavigateUp() {
         NavHostFragment navHostFragment =
                 (NavHostFragment) getSupportFragmentManager()
