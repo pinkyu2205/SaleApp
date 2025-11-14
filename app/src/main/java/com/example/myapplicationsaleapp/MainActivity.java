@@ -15,12 +15,20 @@ import com.example.myapplicationsaleapp.utils.BadgeUtils;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
+import androidx.annotation.NonNull;
+import android.view.MenuItem;
+import android.widget.Toast;
+import com.google.android.material.navigation.NavigationBarView;
+import android.view.View;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNav;
     private CartViewModel cartViewModel;
     public static final String CART_CHANNEL_ID = "CART_CHANNEL";
+    private static final int ADMIN_USER_ID = 9;
+    private static final String ADMIN_USERNAME = "Nhân viên Hỗ trợ";
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 1) Gắn đúng layout chứa nav_host_fragment
@@ -44,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
                 new AppBarConfiguration.Builder(
                         R.id.productListFragment,
                         R.id.cartFragment,
-                        R.id.mapFragment
+                        R.id.mapFragment,
+                        R.id.chatListFragment
                 ).build();
 
         // 5) Liên kết Toolbar với Navigation
@@ -52,17 +61,49 @@ public class MainActivity extends AppCompatActivity {
 
         // 6) Liên kết BottomNavigationView với NavController
         bottomNav = findViewById(R.id.bottomNavigationView);
-        NavigationUI.setupWithNavController(bottomNav, navController);
+//        NavigationUI.setupWithNavController(bottomNav, navController);
+
+        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+
+                if (id == R.id.chatListFragment) {
+                    // KHI BẤM CHAT: Điều hướng thủ công đến ConversationFragment
+                    Bundle args = new Bundle();
+                    args.putInt("otherUserId", ADMIN_USER_ID);
+                    args.putString("otherUsername", ADMIN_USERNAME);
+
+                    // Đảm bảo không điều hướng nếu đã ở trang chat
+                    if(navController.getCurrentDestination().getId() != R.id.conversationFragment){
+                        navController.navigate(R.id.conversationFragment, args);
+                    }
+                    return true;
+                }
+
+                // Các nút khác (Products, Cart, Map) dùng logic tự động của NavigationUI
+                return NavigationUI.onNavDestinationSelected(item, navController);
+            }
+        });
 
         // 7) Ẩn/hiện BottomNavigationView dựa trên destination
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            // Ẩn BottomNavigationView ở màn hình đăng nhập và đăng ký
-            if (destination.getId() == R.id.loginFragment || 
-                destination.getId() == R.id.signupFragment) {
-                bottomNav.setVisibility(android.view.View.GONE);
+            if (destination.getId() == R.id.loginFragment ||
+                    destination.getId() == R.id.signupFragment) {
+                bottomNav.setVisibility(View.GONE);
             } else {
-                // Hiện BottomNavigationView ở các màn hình khác
-                bottomNav.setVisibility(android.view.View.VISIBLE);
+                bottomNav.setVisibility(View.VISIBLE);
+            }
+
+            // THÊM MỚI: Khi điều hướng, tự động chọn item trên taskbar
+            if (destination.getId() == R.id.productListFragment ||
+                    destination.getId() == R.id.cartFragment ||
+                    destination.getId() == R.id.mapFragment) {
+                bottomNav.getMenu().findItem(destination.getId()).setChecked(true);
+            }
+            // Nếu vào trang chat, cũng tự chọn tab chat
+            if (destination.getId() == R.id.conversationFragment) {
+                bottomNav.getMenu().findItem(R.id.chatListFragment).setChecked(true);
             }
         });
         createNotificationChannel();

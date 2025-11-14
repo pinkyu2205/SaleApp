@@ -41,7 +41,7 @@ public class ProductListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Báo cho hệ thống biết Fragment này muốn thêm item vào menu trên Toolbar
-        setHasOptionsMenu(true);
+//        setHasOptionsMenu(true);
     }
 
     @Override
@@ -92,33 +92,33 @@ public class ProductListFragment extends Fragment {
 
     // ==== THÊM PHƯƠNG THỨC NÀY ====
     // Nạp file menu (menu_main.xml) vào Toolbar
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    // ==== THÊM PHƯƠNG THỨC NÀY ====
-    // Xử lý khi người dùng click vào item trên menu
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        // Lấy NavController
-        NavController navController = Navigation.findNavController(requireView());
-        int id = item.getItemId();
-
-        if (id == R.id.action_cart_to_billing) {
-            // Điều hướng đến Giỏ hàng (dùng action ID trong nav_graph)
-            navController.navigate(R.id.action_list_to_cart);
-            return true;
-
-        } else if (id == R.id.action_detail_to_cart) {
-            // Xử lý settings (nếu có)
-            Toast.makeText(getContext(), "Settings clicked", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+//        inflater.inflate(R.menu.toolbar_menu, menu);
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
+//
+//    // ==== THÊM PHƯƠNG THỨC NÀY ====
+//    // Xử lý khi người dùng click vào item trên menu
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        // Lấy NavController
+//        NavController navController = Navigation.findNavController(requireView());
+//        int id = item.getItemId();
+//
+//        if (id == R.id.action_open_chat) {
+//            // Điều hướng đến Giỏ hàng (dùng action ID trong nav_graph)
+//            navController.navigate(R.id.action_global_chatListFragment);
+//            return true;
+//        }
+////        } else if (id == R.id.action_detail_to_cart) {
+////            // Xử lý settings (nếu có)
+////            Toast.makeText(getContext(), "Settings clicked", Toast.LENGTH_SHORT).show();
+////            return true;
+////        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
 
     // --- Adapter ---

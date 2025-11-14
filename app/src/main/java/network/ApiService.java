@@ -63,4 +63,32 @@ public interface ApiService {
             @Header("Authorization") String bearerToken,
             @Path("id") int cartItemId
     ); // Mới
+
+    // === CHAT (THÊM MỚI) ===
+
+    /**
+     * Lấy danh sách các cuộc hội thoại (inbox).
+     * Trả về danh sách UserProfile của những người bạn đã chat.
+     */
+    @GET("api/chat/list")
+    Call<List<UserProfile>> getChatList(@Header("Authorization") String bearerToken);
+
+    /**
+     * Lấy lịch sử tin nhắn với một người dùng cụ thể.
+     */
+    @GET("api/chat/history/{otherUserId}")
+    Call<List<ChatMessage>> getConversationHistory(
+            @Header("Authorization") String bearerToken,
+            @Path("otherUserId") int otherUserId
+    );
+
+    /**
+     * Gửi một tin nhắn mới.
+     * (Backend cũng sẽ tự động đẩy tin này qua SignalR)
+     */
+    @POST("api/chat/send")
+    Call<ChatMessage> sendMessage(
+            @Header("Authorization") String bearerToken,
+            @Body SendChatMessageRequest body
+    );
 }
