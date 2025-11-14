@@ -10,8 +10,6 @@ import com.microsoft.signalr.HubConnectionState;
 import java.util.function.Consumer;
 import network.models.ChatMessage;
 
-// XÓA TẤT CẢ IMPORT LIÊN QUAN TỚI OkHttpClient hoặc HttpConnectionOptions
-
 public class SignalRService {
     private static final String TAG = "SignalRService";
     private static volatile SignalRService instance;
@@ -31,22 +29,19 @@ public class SignalRService {
         return instance;
     }
 
-    // ==== SỬA LẠI PHƯƠNG THỨC NÀY VỀ DẠNG GỐC ====
     public void startConnection() {
         String token = TokenStore.get(context);
         if (token == null) {
-            Log.e(TAG, "Không thể kết nối SignalR: Chưa đăng nhập (token == null)");
+            Log.e(TAG, "Không thể kết nối SignalR: Chưa đăng nhập");
             return;
         }
 
         if (hubConnection == null || hubConnection.getConnectionState() == HubConnectionState.DISCONNECTED) {
             try {
-                // Chạy trên một thread riêng (giữ nguyên)
                 io.reactivex.rxjava3.schedulers.Schedulers.io().scheduleDirect(() -> {
                     try {
-
-                        // Xây dựng HubConnection CƠ BẢN NHẤT
-                        // SSL Bypass đã được xử lý toàn cục ở Bước 2
+                        // QUAN TRỌNG: Xây dựng HubConnection đơn giản nhất
+                        // SSL Bypass đã được xử lý toàn cục trong LoginFragment
                         hubConnection = HubConnectionBuilder.create(HUB_URL)
                                 .withAccessTokenProvider(io.reactivex.rxjava3.core.Single.defer(() -> {
                                     return io.reactivex.rxjava3.core.Single.just(TokenStore.get(context));
@@ -55,24 +50,21 @@ public class SignalRService {
                                 .build();
 
                         registerHubEvents();
-
                         hubConnection.start().blockingAwait();
-                        Log.i(TAG, "Kết nối SignalR THÀNH CÔNG (đã bypass SSL)!");
+                        Log.i(TAG, "✅ Kết nối SignalR THÀNH CÔNG!");
 
                     } catch (Exception e) {
-                        Log.e(TAG, "Lỗi khi kết nối SignalR: " + e.getMessage());
+                        Log.e(TAG, "❌ Lỗi khi kết nối SignalR: " + e.getMessage(), e);
                     }
                 });
 
             } catch (Exception e) {
-                Log.e(TAG, "Lỗi khi tạo HubConnection: " + e.getMessage());
+                Log.e(TAG, "❌ Lỗi khi tạo HubConnection: " + e.getMessage(), e);
             }
         } else {
-            Log.d(TAG, "Kết nối SignalR đã tồn tại, bỏ qua...");
+            Log.d(TAG, "ℹ️ Kết nối SignalR đã tồn tại");
         }
     }
-    // ==== KẾT THÚC SỬA ĐỔI ====
-
 
     public void stopConnection() {
         if (hubConnection != null && hubConnection.getConnectionState() == HubConnectionState.CONNECTED) {
@@ -86,28 +78,35 @@ public class SignalRService {
         if (hubConnection == null) return;
 
         hubConnection.onClosed(exception -> {
-            Log.w(TAG, "Kết nối SignalR đã đóng: " + (exception != null ? exception.getMessage() : "Bình thường"));
+            Log.w(TAG, "⚠️ Kết nối SignalR đã đóng: " +
+                    (exception != null ? exception.getMessage() : "Bình thường"));
         });
     }
 
     public void setOnMessageReceivedListener(@NonNull Consumer<ChatMessage> listener) {
         if (hubConnection == null) {
-            Log.e(TAG, "HubConnection null, không thể đăng ký listener");
+            Log.e(TAG, "❌ HubConnection null, không thể đăng ký listener");
             return;
         }
 
-        Log.d(TAG, "Đăng ký listener cho 'ReceiveMessage'");
+        Log.d(TAG, "📝 Đăng ký listener cho 'ReceiveMessage'");
 
         hubConnection.on("ReceiveMessage", (message) -> {
-            Log.i(TAG, "Nhận được tin nhắn từ Hub: " + message.message);
+            Log.i(TAG, "📩 Nhận được tin nhắn từ Hub: " + message.message);
             listener.accept(message);
         }, ChatMessage.class);
     }
 
     public void removeOnMessageReceivedListener() {
         if (hubConnection != null) {
-            Log.d(TAG, "Gỡ đăng ký listener 'ReceiveMessage'");
+            Log.d(TAG, "🗑️ Gỡ đăng ký listener 'ReceiveMessage'");
             hubConnection.remove("ReceiveMessage");
         }
+    }
+
+    // THÊM: Kiểm tra trạng thái kết nối
+    public boolean isConnected() {
+        return hubConnection != null &&
+                hubConnection.getConnectionState() == HubConnectionState.CONNECTED;
     }
 }

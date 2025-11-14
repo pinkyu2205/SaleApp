@@ -7,6 +7,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -109,8 +111,17 @@ public class ConversationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // 5. Đăng ký lắng nghe tin nhắn mới khi Fragment hiển thị
-        signalRService.setOnMessageReceivedListener(this::onMessageReceived);
+        if (!signalRService.isConnected()) {
+            Log.w(TAG, "⚠️ SignalR chưa kết nối, đang thử kết nối lại...");
+            signalRService.startConnection();
+
+            // Đợi 2 giây rồi đăng ký listener
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                signalRService.setOnMessageReceivedListener(this::onMessageReceived);
+            }, 2000);
+        } else {
+            signalRService.setOnMessageReceivedListener(this::onMessageReceived);
+        }
     }
 
     @Override
@@ -185,14 +196,15 @@ public class ConversationFragment extends Fragment {
                 etMessage.setEnabled(true);
 
                 if (response.isSuccessful() && response.body() != null) {
-                    // Xóa text trong ô nhập liệu
                     etMessage.setText("");
 
-                    // Tin nhắn đã được gửi (và sẽ được nhận lại qua SignalR)
-                    Log.d(TAG, "Gửi tin nhắn qua API thành công.");
-                    // (Chúng ta không cần add vào list ở đây, vì sẽ chờ Hub trả về)
+                    // THÊM: Reload lịch sử sau 500ms (fallback nếu SignalR chậm)
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        loadConversationHistory();
+                    }, 500);
+
+                    Log.d(TAG, "✅ Gửi tin nhắn thành công qua API");
                 } else {
-                    Log.e(TAG, "Lỗi gửi tin nhắn (API): " + response.message());
                     Toast.makeText(getContext(), "Gửi thất bại", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -209,18 +221,26 @@ public class ConversationFragment extends Fragment {
 
     // 7. Hàm được gọi khi SignalR đẩy tin nhắn mới về
     private void onMessageReceived(ChatMessage message) {
-        // Đảm bảo chúng ta đang ở UI thread
         if (getActivity() == null) return;
 
+        Log.d(TAG, "📨 Callback onMessageReceived: " + message.message);
+
         getActivity().runOnUiThread(() -> {
-            // Chỉ thêm tin nhắn nếu nó thuộc cuộc trò chuyện này
-            if ((message.senderID == myUserId && message.recipientID == otherUserId) ||
-                    (message.senderID == otherUserId && message.recipientID == myUserId))
-            {
+            // QUAN TRỌNG: Kiểm tra tin nhắn thuộc cuộc trò chuyện này
+            boolean isMyConversation =
+                    (message.senderID == myUserId && message.recipientID == otherUserId) ||
+                            (message.senderID == otherUserId && message.recipientID == myUserId);
+
+            if (isMyConversation) {
                 messageList.add(message);
                 adapter.notifyItemInserted(messageList.size() - 1);
-                rvMessages.scrollToPosition(messageList.size() - 1); // Cuộn xuống cuối
+                rvMessages.scrollToPosition(messageList.size() - 1);
+
+                Log.d(TAG, "✅ Đã thêm tin nhắn vào danh sách");
+            } else {
+                Log.d(TAG, "ℹ️ Tin nhắn không thuộc cuộc trò chuyện này");
             }
         });
     }
+
 }
