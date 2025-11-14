@@ -11,16 +11,20 @@ import androidx.navigation.Navigation;
 import com.example.myapplicationsaleapp.R;
 import network.ApiService;
 import network.RetrofitClient;
+import network.SignalRService;
 import network.models.LoginRequest;
 import network.models.LoginResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import network.SslBypass;
 
 public class LoginFragment extends Fragment {
     public LoginFragment(){ super(R.layout.fragment_login); }
 
     @Override public void onViewCreated(View v, @Nullable Bundle s){
+        super.onViewCreated(v, s);
+        SslBypass.trustAllCertificates();
         v.<Button>findViewById(R.id.btnLogin).setOnClickListener(btn -> {
             String username = v.<TextView>findViewById(R.id.editTextUsername).getText().toString().trim();
             String password = v.<TextView>findViewById(R.id.editTextPassword).getText().toString();
@@ -34,6 +38,7 @@ public class LoginFragment extends Fragment {
                     if (res.isSuccessful() && res.body() != null) {
                         String token = res.body().getToken();
                         TokenStore.save(requireContext(), token);
+                        SignalRService.getInstance(requireContext()).startConnection();
                         Navigation.findNavController(v).navigate(R.id.action_login_to_productList);
                     } else {
                         Toast.makeText(requireContext(), "Login failed: " + res.code(), Toast.LENGTH_SHORT).show();

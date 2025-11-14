@@ -79,5 +79,30 @@
         android:id="@+id/mapFragment"
         android:name="com.example.myapplicationsaleapp.ui.map.MapFragment"
         android:label="Map" />
+    <fragment
+        android:id="@+id/chatListFragment"
+        android:name="com.example.myapplicationsaleapp.ui.chat.ChatListFragment"
+        android:label="Hỗ trợ (Inbox)">
+        <action
+            android:id="@+id/action_chatList_to_conversation"
+            app:destination="@id/conversationFragment" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/conversationFragment"
+        android:name="com.example.myapplicationsaleapp.ui.chat.ConversationFragment"
+        android:label="Chi tiết Chat">
+        <argument
+            android:name="otherUserId"
+            app:argType="integer" />
+        <argument
+            android:name="otherUsername"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="Chat" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_chatListFragment"
+        app:destination="@id/chatListFragment" />
 </navigation>

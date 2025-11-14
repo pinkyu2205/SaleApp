@@ -41,7 +41,7 @@ public class RetrofitClient {
     }
 
     // DEV ONLY: trust all SSL certs for local https to 10.0.2.2
-    private static OkHttpClient.Builder getUnsafeOkHttpClient() {
+    public static OkHttpClient.Builder getUnsafeOkHttpClient() {
         try {
             final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {

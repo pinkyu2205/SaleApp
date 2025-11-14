@@ -53,6 +53,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata:2.8.6")
     implementation("io.coil-kt:coil:2.5.0")
     implementation("org.osmdroid:osmdroid-android:6.1.18")
+    implementation("com.microsoft.signalr:signalr:8.0.0")
+    implementation("com.auth0.android:jwtdecode:2.0.2")
 
     // Retrofit + Gson + OkHttp logging
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
